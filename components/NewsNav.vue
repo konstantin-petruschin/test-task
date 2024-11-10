@@ -16,14 +16,14 @@
       <h2 class="breadcrumbs__item breadcrumbs__item--last" v-if="isNavFixed">
         <nuxt-link
           exact
-          to="/news/{slug}"
+          :to="`/news/${slug}`"
           active-class="active"
           class="breadcrumbs__link"
         >
-          {slug}
+          {{ slug }}
         </nuxt-link>
       </h2>
-      <button class="news-item__close">
+      <button class="news-item__close" @click="$router.push('/news')">
         <span class="visually-hidden">Закрыть.</span>
       </button>
     </div>
@@ -33,8 +33,15 @@
 <script lang="ts" setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
-const isNavFixed = ref(false); // Объявляем isNavFixed как ref
+const isNavFixed = ref(false);
 const navTop = ref(0);
+
+const props = defineProps({
+  slug: {
+    type: String,
+    required: true,
+  },
+});
 
 onMounted(() => {
   window.addEventListener('scroll', handleScroll);

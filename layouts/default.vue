@@ -1,15 +1,21 @@
 <template>
-  <div class="popap-news">
-    <div class="popap-news__content" :style="{ paddingTop: isNavFixed ? '7px 4px 0' : '23px 4px 0' }">
-      <div class="popap-news__item news-item">
-        <NewsNav/>
-        <Tags/>
-        <BodyNews/>
-        <NextNews/>
-      </div>
-    </div>
+  <div v-if="news.value">
+    <NewsNav :slug="$route.params.slug" />
+    <Tags :tags="news.value.tags" />
+    <BodyNews :news="news.value" />
+    <NextNews :slug="nextNewsSlug" />
+  </div>
+
+  <div v-else-if="error.value">
+    <p>Ошибка загрузки новости</p>
+  </div>
+
+  <div v-else>
+    <p>Загрузка...</p>
   </div>
 </template>
+
+
 
 <style>
   body {
@@ -99,18 +105,49 @@
 
 </style>
 
-<script>
-  import NewsNav from '~/components/NewsNav';
-  import Tags from '~/components/Tags';
-  import BodyNews from '~/components/BodyNews';
-  import NextNews from '~/components/NextNews';
+<script setup>
+import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { useFetch } from '#imports';
+import NewsNav from '~/components/NewsNav.vue';
+import Tags from '~/components/Tags.vue';
+import BodyNews from '~/components/BodyNews.vue';
+import NextNews from '~/components/NextNews.vue';
 
-  export default {
-    components: {
-      NewsNav,
-      Tags,
-      BodyNews,
-      NextNews,
+const isNavFixed = ref(false);
+const navTop = ref(0);
+const news = ref(null);
+const nextNewsSlug = ref(null);
+
+const { data, error } = useFetch(`https://bsk-admin-test.testers-site.ru/api/news/${$route.params.slug}`);
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll);
+  const navElement = document.querySelector('.news-item__nav');
+  if (navElement instanceof HTMLElement) {
+    navTop.value = navElement.getBoundingClientRect().top;
+  }
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
+
+const handleScroll = () => {
+  isNavFixed.value = window.scrollY >= navTop.value;
+};
+
+if (data.value) {
+  news.value = data.value;
+
+  if (data.value.allNews) {
+    const currentIndex = data.value.allNews.findIndex(item => item.slug === $route.params.slug);
+    if (currentIndex > -1 && currentIndex < data.value.allNews.length - 1) {
+      nextNewsSlug.value = data.value.allNews[currentIndex + 1].slug;
     }
   }
+} else if (error.value) {
+
+  console.error("Ошибка загрузки новости:", error.value);
+}
 </script>
+

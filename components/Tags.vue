@@ -1,9 +1,19 @@
 <template>
   <div class="news-item__tags tags container">
-    <nuxt-link to="" class="tags__item">В СМИ</nuxt-link>
-    <nuxt-link to="" class="tags__item tags__item--promotions">акции</nuxt-link>
+    <span v-for="(tag, index) in tags" :key="index" class="tags__item">
+      {{ tag }}
+    </span>
   </div>
 </template>
+
+<script lang="ts" setup>
+const props = defineProps({
+  tags: {
+    type: Array,
+    required: true,
+  },
+});
+</script>
 
 
 <style>

@@ -1,19 +1,24 @@
 <template>
   <div class="container">
-    <div class="news-item__next news-next">
-        <img src="../images/img.png" alt="news-next__image">
-      <div class="news-next__text-wrapper">
-        <p class="news-next__title">Правительство продлило «Льготную ипотеку» и расширило «Семейную».</p>
-        <div class="news-next__tags">
-          <Tags/>
+    <div class="news-item__next news-next" v-if="slug">
+      <a :href="`/news/${slug}`" class="news-next__link">
+        <span class="visually-hidden">Следующая новость.</span>
+        <img src="../images/img.png" alt="news-next__image" class="news-next__image">
+        <div class="news-next__text-wrapper">
+          <p class="news-next__title">Читать следующую новость</p>
         </div>
-        <nuxt-link to="" class="news-next__link">
-          <span class="visually-hidden">Следующая новость.</span>
-        </nuxt-link>
-      </div>
+      </a>
     </div>
   </div>
 </template>
+
+<script lang="ts" setup>
+const props = defineProps({
+  slug: {
+    type: String,
+  },
+});
+</script>
 
 <style>
 
