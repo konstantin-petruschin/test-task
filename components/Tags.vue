@@ -1,5 +1,5 @@
 <template>
-  <div class="news-item__tags tags">
+  <div class="news-item__tags tags container">
     <nuxt-link to="" class="tags__item">В СМИ</nuxt-link>
     <nuxt-link to="" class="tags__item tags__item--promotions">акции</nuxt-link>
   </div>
@@ -7,14 +7,19 @@
 
 
 <style>
+
+
   .tags {
     list-style: none;
     margin: 0;
     padding: 0;
-    margin-bottom: 16px;
     display: flex;
     align-items: center;
     gap: 8px;
+  }
+
+  .news-item__tags {
+    margin-bottom: 16px;
   }
 
   .tags__item {
